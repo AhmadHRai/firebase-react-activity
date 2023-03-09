@@ -1,7 +1,9 @@
 import React from "react";
+import { auth } from "../../util/firebase";
+
 
 const Profile = () => {
-  const email = undefined // This should get the email from auth
+  const email = auth?.currentUser?.email // This should get the email from auth
   return (
     <div className="flex min-h-full flex-col justify-center py-12 sm:px-6 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-md">

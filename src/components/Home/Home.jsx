@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from "react";
+import { collection, addDoc,getDocs } from "firebase/firestore"; 
+import {db,auth} from "../../util/firebase"
 
 // This is just for illustrating purposes. Please don't rely on it.
 const TODO_EXAMPLE = [
@@ -22,11 +24,29 @@ const Home = () => {
 
   const getListOfTodos = async () => {
     // Write the code to get the todo list here
+    const querySnapshot = await getDocs(collection(db, "todos"));
+    querySnapshot.forEach((doc) => {
+    console.log(doc.data());
+    setTodos([...todos,doc.data()]);
+  });
+  console.log("todos")
+    console.log(todos)
   };
 
   const addTodo = async (e) => {
     e.preventDefault();
     // Write the code to add a new todo here. Remember that it should include the uid so it can be filtered.
+    try {
+      const docRef = await addDoc(collection(db, "todos"), {
+        name: todo,
+        uid:auth?.currentUser?.uid
+      });
+      setTodo("")
+      console.log("Document written with ID: ", docRef.id);
+    } catch (e) {
+      console.error("Error adding document: ", e);
+    }
+
     getListOfTodos();
   };
 
@@ -80,8 +100,8 @@ const Home = () => {
             <h1>Todos</h1>
             <ul className="divide-y divide-gray-200">
               {/* The code below should be changed to get the data from the docs */}
-              {TODO_EXAMPLE.filter(
-                (todo) => todo.uid === "IOUASD0123jl??M<OP@&#"
+              {todos.filter(
+                (todo) => todo.uid === auth?.currentUser?.uid
               ).map((todo) => {
                 return (
                   <li
@@ -103,7 +123,7 @@ const Home = () => {
                     </div>
                   </li>
                 );
-              })}
+              })??""}
             </ul>
           </div>
         </div>

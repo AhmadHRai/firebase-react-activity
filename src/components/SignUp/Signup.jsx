@@ -1,13 +1,33 @@
 import { Link } from "react-router-dom";
 import { useState } from "react";
+import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+
 
 export default function Signup() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const auth = getAuth();
+
 
   const signUp = async (e) => {
     e.preventDefault();
     // Put the signUp code here
+    createUserWithEmailAndPassword(auth, email, password)
+  .then((userCredential) => {
+    // Signed in 
+    const user = userCredential.user;
+    // ...
+    console.log("Signup Success\n")
+    console.log(user)
+  })
+  .catch((error) => {
+    const errorCode = error.code;
+    const errorMessage = error.message;
+    // ..
+    console.log("Error\n")
+    console.log(errorCode)
+    console.log(errorMessage)
+  });
   };
   return (
     <>

@@ -1,6 +1,10 @@
 import { Disclosure } from "@headlessui/react";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import { NavLink } from "react-router-dom";
+import { auth } from "../../util/firebase";
+import { signOut } from "firebase/auth";
+
+
 
 const navigation = [
   { name: "Home", href: "/", current: true },
@@ -13,7 +17,25 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
+function SignOutButton(){
+  function handleSignout(){
+    signOut(auth).then(() => {
+      // Sign-out successful.
+      console.log("Signed out")
+      //todo: add isLoggedIn state in the app js and style this button later on in live when everything is ok
+    }).catch((error) => {
+      console.log(error)
+    });
+  }
+  return(
+    <>
+      <button onClick={handleSignout}>SignOut</button>
+    </>
+  );
+}
+
 export default function Navbar() {
+
   return (
     <Disclosure as="nav" className="bg-gray-800">
       {({ open }) => (
@@ -51,6 +73,7 @@ export default function Navbar() {
                       </NavLink>
                     </>
                   ))}
+                  {auth?.currentUser && <SignOutButton/>}
                 </div>
               </div>
             </div>
@@ -74,6 +97,7 @@ export default function Navbar() {
                   {item.name}
                 </Disclosure.Button>
               ))}
+              {auth?.currentUser && <SignOutButton/>}
             </div>
           </Disclosure.Panel>
         </>

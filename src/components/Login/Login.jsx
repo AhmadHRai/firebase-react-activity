@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { auth } from "../../util/firebase";
 import { signInWithEmailAndPassword } from "firebase/auth";
+
 import { useState } from "react";
 
 export default function Login() {
@@ -10,6 +11,21 @@ export default function Login() {
   const signIn = async (e) => {
     e.preventDefault();
     // Write your signIn code here
+    signInWithEmailAndPassword(auth, email, password)
+  .then((userCredential) => {
+    // Signed in 
+    const user = userCredential.user;
+    // ...
+    console.log("Logged In\n")
+    console.log(user)
+  })
+  .catch((error) => {
+    const errorCode = error.code;
+    const errorMessage = error.message;
+    console.log("Error\n")
+    console.log(errorCode)
+    console.log(errorMessage)
+  });
   };
 
   return (
